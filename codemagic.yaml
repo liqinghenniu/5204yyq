@@ -1,22 +1,41 @@
 workflows:
-  flutter:
-    name: Flutter Workflow
-    android:
-      version: 2
-      build:
-        script:
-          - flutter clean
-          - flutter pub get
-          - flutter build apk --release
-    ios:
-      version: 2
-      build:
-        script:
-          - flutter clean
-          - flutter pub get
-          - flutter build ios --release
-      publishing:
+  flutter-app:
+    name: Flutter CI/CD
+    instance_type: mac_mini_m1  # 选择构建机器 (安卓可用 mac_mini_m1 或 linux_x2)
+    
+    environment:
+      flutter: stable
+      xcode: latest  # 如果是 iOS 构建
+      android_signing:
+        - keystore_reference: $CM_KEYSTORE_REFERENCE
+      vars:
+        PACKAGE_NAME: "com.example.myapp"  # 你的 Android 包名
+        FIREBASE_APP_ID: "1:392265675682:android:14fbb051fb1bd3442878fb"  # 替换成 Firebase app_id
+
+    scripts:
+      - name: 安装 Flutter 依赖
+        script: |
+          flutter clean
+          flutter pub get
+
+      - name: 构建 Android APK
+        script: |
+          flutter build apk --release
+
+      - name: 构建 AAB (可选)
+        script: |
+          flutter build appbundle --release
+
+      - name: 构建 iOS (如果支持 iOS)
+        script: |
+          flutter build ios --no-codesign
+
+    artifacts:
+      - build/app/outputs/flutter-apk/app-release.apk
+      - build/app/outputs/bundle/release/app-release.aab
+
+    publishing:
       firebase:
-      app_id: "1:392265675682:android:14fbb051fb1bd3442878fb"
-      service_account: $FIREBASE_CREDENTIALS
-      groups: testers
+        app_id: 1:392265675682:android:14fbb051fb1bd3442878fb
+        service_account: $FIREBASE_CREDENTIALS
+        groups: testers  # 你的测试组
