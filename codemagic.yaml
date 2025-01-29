@@ -9,7 +9,7 @@ workflows:
       android_signing:
         - keystore_reference: $CM_KEYSTORE_REFERENCE
       vars:
-        PACKAGE_NAME: "com.example.myapp"  # 你的 Android 包名
+        PACKAGE_NAME: "com.example.myproject"  # 你的 Android 包名
         FIREBASE_APP_ID: "1:392265675682:android:14fbb051fb1bd3442878fb"  # 替换成 Firebase app_id
 
     scripts:
