@@ -1,0 +1,22 @@
+workflows:
+  flutter:
+    name: Flutter Workflow
+    android:
+      version: 2
+      build:
+        script:
+          - flutter clean
+          - flutter pub get
+          - flutter build apk --release
+    ios:
+      version: 2
+      build:
+        script:
+          - flutter clean
+          - flutter pub get
+          - flutter build ios --release
+      publishing:
+      firebase:
+      app_id: "1:392265675682:android:14fbb051fb1bd3442878fb"
+      service_account: $FIREBASE_CREDENTIALS
+      groups: testers
